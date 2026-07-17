@@ -72,18 +72,18 @@
         .dynamic-blur-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-size: cover; background-position: center;
-            filter: blur(2px) brightness(0.9) saturate(1.2); transform: scale(1.1); /* <--- opacidade modo escuro */
+            filter: blur(2px) brightness(0.9) saturate(1.2); transform: scale(1.1);
             transition: opacity 0.8s ease, background-image 0.8s ease;
             z-index: -2;
         }
-        body.light-mode .dynamic-blur-bg { filter: blur(2px) brightness(1.2) saturate(1.2); } /* <--- opacidade modo claro */
+        body.light-mode .dynamic-blur-bg { filter: blur(2px) brightness(1.2) saturate(1.2); }
         
         .dynamic-blur-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(18, 18, 18, 0.25); z-index: -1; /* <--- Reduzi a opacidade da película escura de 0.4 para 0.25 */
+            background: rgba(18, 18, 18, 0.25); z-index: -1;
             opacity: var(--blur-overlay-opacity); transition: opacity 0.8s ease;
         }
-        body.light-mode .dynamic-blur-overlay { background: rgba(255, 255, 255, 0.15); } /* <--- Reduzi no modo claro de 0.15 para 0.15 */
+        body.light-mode .dynamic-blur-overlay { background: rgba(255, 255, 255, 0.15); }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; height: 100vh; overflow: hidden; transition: background-color 0.3s, color 0.3s; }
@@ -364,8 +364,8 @@
         
         .exp-header { display: flex; justify-content: center; align-items: center; margin-bottom: 40px; position: relative; }
         .exp-drag-handle { width: 40px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 3px; cursor: pointer; }
-        .exp-art-container { width: 100%; aspect-ratio: 1/1; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden; margin-bottom: 40px; }
-        .exp-art-container img { width: 100%; height: 100%; object-fit: cover; }
+        .exp-art-container { width: 100%; aspect-ratio: 1/1; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden; margin-bottom: 40px; background-color: #000; position: relative; }
+        .exp-art-container img, .exp-art-container video { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; display: block; }
         
         .exp-info-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .exp-text { display: flex; flex-direction: column; overflow: hidden; padding-right: 15px; }
@@ -384,84 +384,110 @@
         .exp-play-btn { width: 65px; height: 65px; background: white; color: black; border-radius: 50%; display: flex; justify-content: center; align-items: center; opacity: 1; }
         .exp-play-btn:active { transform: scale(0.95); }
 
-        /* RESPONSIVIDADE E DISPOSITIVOS MÓVEIS (CORRIGIDO) */
-        @media (max-width: 820px) {
-            .dashboard-section { padding: 20px 15px 150px 15px; overflow-y: auto; overflow-x: hidden; }
-            .carousel-container { display: none !important; }
-            .album-grid { display: grid !important; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
-            .grid-card { padding: 14px; }
-            .album-art-wrapper { margin-bottom: 12px; }
-            .album-card-title { font-size: 14px; }
-            .album-card-artist { font-size: 12px; }
-            .top-nav-bar { padding: 15px 15px 5px 15px; display: flex; justify-content: flex-start; background-color: transparent; }
-            .album-detail-section { overflow-y: auto !important; height: 100vh !important; -webkit-overflow-scrolling: touch; padding-bottom: 150px; }
-            .detail-split-container { display: flex; flex-direction: column; overflow: visible !important; padding: 10px 15px 20px 15px; gap: 25px; height: auto; }
-            
-            /* Ajustado de tamanho fixo para fluido e centralizado */
-            .left-album-block { 
-               width: 100%; 
-               max-width: 300px;
-               height: auto;
-               margin: 0 auto;
-               flex-shrink: 0; 
-               display: flex; 
-               flex-direction: column; 
-            }
-            .album-media-container { 
-               width: 100%; 
-               height: auto;
-               aspect-ratio: 1 / 1; 
-               position: relative; 
-               border-radius: 16px; 
-               box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
-               overflow: hidden; 
-               background-color: #000; 
-               flex-shrink: 0;
-            }
-            .album-header-top { align-items: center; text-align: center; border: none; padding-bottom: 0; margin-bottom: 10px; }
-            .album-title-header { font-size: 22px; }
-            .album-header-body { flex-direction: column; overflow: visible; gap: 15px; }
-            .album-info-side { align-items: center; text-align: center; min-width: auto; }
-            .right-content-block { overflow: visible !important; height: auto; }
-            .right-tracklist-block { overflow: visible !important; height: auto; max-height: none !important; padding-right: 0; margin-bottom: 0; }
-            
-            /* Se o tema de fundo estiver ativo, a caixa protetora se expande no mobile */
-            body.bg-art-active .right-content-block { padding: 15px; backdrop-filter: blur(10px); }
+        /* RESPONSIVIDADE E DISPOSITIVOS MÓVEIS */
+/* RESPONSIVIDADE E DISPOSITIVOS MÓVEIS - ATUALIZADO */
+@media (max-width: 820px) {
+    .dashboard-section { padding: 60px 15px 150px 15px; overflow-y: auto; overflow-x: hidden; }
+    .section-title { font-size: 24px; padding-right: 40px; }
+    .carousel-container { display: none !important; }
+    
+    /* Grade de 2 por linha */
+    .album-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px; margin-top: 20px; }
+    .grid-card { padding: 10px; }
+    
+    .album-art-wrapper { margin-bottom: 12px; }
+    .album-card-title { font-size: 14px; }
+    .album-card-artist { font-size: 12px; }
 
-            .floating-player-wrapper { 
-                bottom: 15px; left: 50%; right: auto; transform: translateX(-50%); width: 92%; padding: 10px 16px;
-                border-radius: 16px;
-            }
-            .center-meta { flex: 1; width: auto; min-width: 0; gap: 12px; pointer-events: none; }
-            .player-cover-mini { width: 44px; height: 44px; }
-            .player-song-title { font-size: 14px; }
-            .player-control-center { flex: none; width: auto; min-width: 0; flex-direction: row; }
-            .timeline-container, .shuffle-btn, .repeat-btn-text, .volume-slider { display: none !important; }
-            
-            .player-controls { gap: 10px; }
-            .control-btn svg { width: 18px; height: 18px; }
-            .play-pause-btn { width: 40px; height: 40px; }
-            .play-pause-btn svg { width: 18px; height: 18px; }
-            
-            /* Ajuste posições no mobile */
-            .top-right-settings { top: 15px; right: 15px; }
-            .settings-popup { right: 0; width: 200px; top: 54px; }
-        }
-        
-        @media (min-width: 821px) {
-            .expanded-player-mobile { display: none !important; }
-        }
-		body.player-active .detail-split-container {
-                padding-bottom: 120px !important;
-                transition: padding-bottom 0.3s ease;
-        }
+    /* Barra superior fixa */
+    .top-nav-bar { 
+    position: fixed !important; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    padding: 15px; 
+    display: flex; 
+    justify-content: flex-start; 
+    background-color: var(--bg-color); /* Certifique-se de que não há box-shadow aqui */
+    border: none !important; /* Adicione isso para garantir que nenhuma linha apareça */
+    z-index: 100000; 
+    pointer-events: auto; 
+}
 
-        @media (max-width: 820px) {
-            body.player-active .album-detail-section {
-                padding-bottom: 220px !important; /* Abre espaço extra no celular */
-                transition: padding-bottom 0.3s ease;
-            }
-        }
+    /* Botão voltar fixo */
+    .back-btn { 
+        position: relative !important; 
+        z-index: 100001; 
+        pointer-events: auto;
+    }
+
+    /* Ajuste para o conteúdo não ficar atrás da barra */
+    .album-detail-section { 
+        padding-top: 100x; /* Espaço para a barra fixa */
+        overflow-y: auto !important; 
+        height: 100vh !important; 
+        -webkit-overflow-scrolling: touch; 
+        padding-bottom: 150px; 
+    }
+
+    .detail-split-container { 
+        display: flex; 
+         flex-direction: column; 
+         overflow: visible !important; 
+         padding: 70px 15px 20px 15px; 
+         gap: 25px; 
+         height: auto; 
+}
+    
+    .left-album-block { 
+        width: 100%;  
+		max-width: 300px;
+        height: auto;
+        margin: 20px auto 0 auto; /* O 20px aqui vai afastar a capa da barra de navegação */
+        flex-shrink: 0; 
+        display: flex; 
+        flex-direction: column; 
+}
+    
+    .album-media-container { 
+        width: 100%; 
+        height: auto;
+        aspect-ratio: 1 / 1; 
+        position: relative; 
+        border-radius: 16px; 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
+        overflow: hidden; 
+        background-color: #000; 
+        flex-shrink: 0;
+    }
+
+    .album-header-top { align-items: center; text-align: center; border: none; padding-bottom: 0; margin-bottom: 10px; }
+    .album-title-header { font-size: 22px; }
+    .album-header-body { flex-direction: column; overflow: visible; gap: 15px; }
+    .album-info-side { align-items: center; text-align: center; min-width: auto; }
+    .right-content-block { overflow: visible !important; height: auto; }
+    .right-tracklist-block { overflow: visible !important; height: auto; max-height: none !important; padding-right: 0; margin-bottom: 0; }
+    
+    body.bg-art-active .right-content-block { padding: 15px; backdrop-filter: blur(10px); }
+
+    .floating-player-wrapper { 
+        bottom: 15px; left: 50%; right: auto; transform: translateX(-50%); width: 92%; padding: 10px 16px;
+        border-radius: 16px;
+    }
+    .center-meta { flex: 1; width: auto; min-width: 0; gap: 12px; pointer-events: none; }
+    .player-cover-mini { width: 44px; height: 44px; }
+    .player-song-title { font-size: 14px; }
+    .player-control-center { flex: none; width: auto; min-width: 0; flex-direction: row; }
+    .timeline-container, .shuffle-btn, .repeat-btn-text, .volume-slider { display: none !important; }
+    
+    .player-controls { gap: 10px; }
+    .control-btn svg { width: 18px; height: 18px; }
+    .play-pause-btn { width: 40px; height: 40px; }
+    .play-pause-btn svg { width: 18px; height: 18px; }
+    
+    .top-right-settings { top: 15px; right: 15px; }
+    .settings-popup { right: 0; width: 200px; top: 54px; }
+}
     </style>
 </head>
 <body>
@@ -473,13 +499,13 @@
         <div class="top-right-settings">
             <button class="settings-btn-top" onclick="toggleSettings(event)">
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
                 </svg>
             </button>
             <div class="settings-popup" id="settingsPopup" onclick="event.stopPropagation()">
                 <select class="bg-style-selector" id="layoutSelector" onchange="changeLayout()">
-                    <option value="carousel">Visual: Carrossel</option>
                     <option value="grid">Visual: Grade</option>
+                    <option value="carousel">Visual: Carrossel</option>
                 </select>
                 
                 <select class="bg-style-selector" id="bgStyleSelector" onchange="changeBackgroundStyle()">
@@ -593,7 +619,7 @@
             </div>
 
             <div class="volume-container" onclick="event.stopPropagation()">
-                <button class="volume-btn">
+                <button class="volume-btn" onclick="toggleMute()">
                     <svg id="volumeIcon" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
                     </svg>
@@ -608,6 +634,7 @@
             </div>
             <div class="exp-art-container">
                 <img id="expArt" src="" alt="Capa">
+                <video id="expVideo" loop muted playsinline></video>
             </div>
             <div class="exp-info-row">
                 <div class="exp-text">
@@ -648,7 +675,7 @@
     <script>
         const albums = [
             {
-                id: "baby-one-more-time", folder: "01 Baby One More Time", title: "...Baby One More Time", artist: "Britney Spears", video: null, cover: "capa.jpg", year: "1999", genre: "Pop",
+                id: "baby-one-more-time", folder: "01 Baby One More Time", title: "...Baby One More Time", artist: "Britney Spears", video: "video.mp4", cover: "capa.jpg", year: "1999", genre: "Pop",
                 tracks: [
                     { num: "1", title: "...Baby One More Time", file: "01 - Britney Spears - Baby One More Time.mp3" },
                     { num: "2", title: "(You Drive Me) Crazy", file: "02 - Britney Spears - Crazy (You Drive Me).mp3" },
@@ -773,7 +800,62 @@
                     { num: "14", title: "Gimme More (Junkie XL Dub)", file: "14 - Gimme More (Junkie XL Dub).mp3" },
                     { num: "15", title: "Everybody", file: "15 - Everybody (Main Version).mp3" }
                 ]
-            }
+            },
+            {
+                id: "circus", folder: "06 Circus", title: "Circus", artist: "Britney Spears", year: "2008", genre: "Pop", cover: "capa.jfif", video: "video.mp4", 
+                tracks: [
+                    { num: "1", title: "Womanizer", file: "01 Womanizer.mp3" },
+                    { num: "2", title: "Circus", file: "02 Circus.mp3" },
+                    { num: "3", title: "Out from Under", file: "03 Out from Under.mp3" },
+                    { num: "4", title: "Kill the Lights", file: "04 Kill the Lights.mp3" },
+                    { num: "5", title: "Shattered Glass", file: "05 Shattered Glass.mp3" },
+                    { num: "6", title: "If U Seek Amy", file: "06 If U Seek Amy.mp3" },
+                    { num: "7", title: "Unusual You", file: "07 Unusual You.mp3" },
+                    { num: "8", title: "Blur", file: "08 Blur.mp3" },
+                    { num: "9", title: "Mmm Papi", file: "09 Mmm Papi.mp3" },
+                    { num: "10", title: "Mannequin", file: "10 Mannequin.mp3" },
+                    { num: "11", title: "Lace and Leather", file: "11 Lace and Leather.mp3" },
+                    { num: "12", title: "My Baby", file: "12 My Baby.mp3" },
+                    { num: "13", title: "Radar", file: "03 - Radar (Main Version).mp3", folder: "05 Blackout" },
+                    { num: "14", title: "Rock Me In", file: "14 Rock Me In.mp3" },
+                    { num: "15", title: "Phonography", file: "15 Phonography.mp3" },
+                    { num: "16", title: "Amnesia", file: "16 Amnesia.mp3" },
+                    { num: "17", title: "Trouble", file: "17 Trouble.mp3" },
+                    { num: "18", title: "Quicksand", file: "18 Quicksand.mp3" },
+                    { num: "19", title: "Rock Boy", file: "19 Rock Boy.mp3" }
+
+                ]
+            },
+{
+    "id": "femme-fatale",
+    "folder": "07 Femme Fatale",
+    "title": "Femme Fatale",
+    "artist": "Britney Spears",
+    "year": "2011",
+    "genre": "Pop",
+    "cover": "capa.jpg",
+    "video": "video.mp4",
+    "tracks": [
+        { "num": "1", "title": "Till The World Ends", "file": "01 Till The World Ends.mp3" },
+        { "num": "2", "title": "Hold It Against Me ", "file": "02 Hold It Against Me .mp3" },
+        { "num": "3", "title": "Inside Out", "file": "03 Inside Out.mp3" },
+        { "num": "4", "title": "I Wanna Go", "file": "04 I Wanna Go.mp3" },
+        { "num": "5", "title": "How I Roll", "file": "05 How I Roll.mp3" },
+        { "num": "6", "title": "(Drop Dead) Beautiful (Feat. Sabi)", "file": "06 (Drop Dead) Beautiful (Feat. Sabi).mp3" },
+        { "num": "7", "title": "Seal It With A Kiss", "file": "07 Seal It With A Kiss.mp3" },
+        { "num": "8", "title": "Big Fat Bass (Feat. Will.i.am)", "file": "08 Big Fat Bass (Feat. Will.i.am).mp3" },
+        { "num": "9", "title": "Trouble For Me", "file": "09 Trouble For Me.mp3" },
+        { "num": "10", "title": "Trip To Your Heart", "file": "10 Trip To Your Heart.mp3" },
+        { "num": "11", "title": "Gasoline", "file": "11 Gasoline.mp3" },
+        { "num": "12", "title": "Criminal", "file": "12 Criminal.mp3" },
+        { "num": "13", "title": "Up N' Down", "file": "13 Up N' Down.mp3" },
+        { "num": "14", "title": "He About To Lose Me", "file": "14 He About To Lose Me.mp3" },
+        { "num": "15", "title": "Selfish", "file": "15 Selfish.mp3" },
+        { "num": "16", "title": "Don't Keep Me Waiting", "file": "16 Don't Keep Me Waiting.mp3" },
+        { "num": "17", "title": "Scary", "file": "17 Scary.mp3" }
+    ]
+}
+        
         ];
 	   
         let selectedAlbum = null; let selectedVersion = null;
@@ -800,7 +882,8 @@
                 document.getElementById('themeToggle').checked = true;
             }
             
-            const savedLayout = localStorage.getItem('layoutStyle') || 'carousel';
+            // CONFIGURADO GRADE ('grid') COMO PADRÃO PRIMEIRO
+            const savedLayout = localStorage.getItem('layoutStyle') || 'grid';
             document.getElementById('layoutSelector').value = savedLayout;
             changeLayout();
 
@@ -881,6 +964,12 @@
                         if (e.key === 'ArrowRight') nextCarousel(); else if (e.key === 'ArrowLeft') prevCarousel(); else if (e.key === 'Enter') { const activeAlbum = albums[currentCarouselIndex]; if (activeAlbum) handleAlbumClick(activeAlbum); }
                     }
                 }
+                
+                // ESPAÇO PARA REPRODUZIR / PAUSAR (E IMPEDIR ROLAGEM DE TELA)
+                if (e.key === ' ' || e.code === 'Space') {
+                    e.preventDefault();
+                    togglePlay();
+                }
             });
         }
 
@@ -901,7 +990,16 @@
 
         function openAlbum(album, version) {
             selectedAlbum = album; selectedVersion = version;
-            document.getElementById('dashboardSection').style.display = 'none'; document.getElementById('albumDetailSection').style.display = 'flex';
+            document.getElementById('dashboardSection').style.display = 'none'; 
+            
+            const detailSec = document.getElementById('albumDetailSection');
+            detailSec.style.display = 'flex';
+            
+            // FORÇA A TELA E LISTA A VOLTAREM PARA O TOPO SEMPRE
+            detailSec.scrollTop = 0;
+            const tracklistBlock = document.querySelector('.right-tracklist-block');
+            if (tracklistBlock) tracklistBlock.scrollTop = 0;
+
             document.getElementById('albumTitle').innerText = version ? version.versionName : album.title;
             document.getElementById('albumArtist').innerText = album.artist;
             document.querySelector('.album-meta').innerText = `${version ? version.genre : album.genre} • ${version ? version.year : album.year}`;
@@ -952,26 +1050,73 @@
 
             const coverPath = `${playingAlbum.folder}/${playingAlbum.cover}`;
             document.getElementById('miniPlayerArt').src = coverPath; document.getElementById('miniPlayerTitle').innerText = track.title; document.getElementById('miniPlayerArtist').innerText = playingAlbum.artist;
-            document.getElementById('expArt').src = coverPath; document.getElementById('expTitle').innerText = track.title; document.getElementById('expArtist').innerText = playingAlbum.artist;
+            
+            // CONFIGURAÇÃO DE MÍDIA MÓVEL (VÍDEO VS CAPA NO EXPANDIDO MÓBILE)
+            const expArtEl = document.getElementById('expArt');
+            const expVideoEl = document.getElementById('expVideo');
+            let videoFile = null;
+            if (playingAlbum === selectedAlbum && selectedVersion) {
+                videoFile = selectedVersion.video;
+            } else {
+                videoFile = playingAlbum.video;
+            }
+
+            if (videoFile && videoFile !== "") {
+                expArtEl.style.display = 'none';
+                expVideoEl.style.display = 'block';
+                expVideoEl.src = `${playingAlbum.folder}/${videoFile}`;
+                expVideoEl.play().catch(()=>{});
+            } else {
+                expVideoEl.style.display = 'none';
+                expVideoEl.pause();
+                expVideoEl.src = "";
+                expArtEl.src = coverPath;
+                expArtEl.style.display = 'block';
+            }
+
+            document.getElementById('expTitle').innerText = track.title; document.getElementById('expArtist').innerText = playingAlbum.artist;
 
             if ('mediaSession' in navigator) {
                 const absoluteCoverUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1) + coverPath;
                 navigator.mediaSession.metadata = new MediaMetadata({ title: track.title, artist: playingAlbum.artist, album: playingAlbum.title, artwork: [{ src: absoluteCoverUrl, sizes: '512x512', type: 'image/jpeg' }] });
+                navigator.mediaSession.playbackState = "playing"; // ATUALIZA TELA DE BLOQUEIO
             }
-            audio.src = `${playingAlbum.folder}/${track.file}`; audio.play().catch(()=>{}); updatePlayButton(true); updateTracklistVisuals();
+            const pastaFinal = track.folder || playingAlbum.folder;
+            audio.src = `${pastaFinal}/${track.file}`; 
+            audio.play().catch(()=>{}); 
+            updatePlayButton(true); 
+            updateTracklistVisuals();
         }
 
         function playAlbumFromStart() { if (selectedAlbum) { playingAlbum = selectedAlbum; playingTracks = (selectedVersion && selectedVersion.tracks) ? selectedVersion.tracks : selectedAlbum.tracks; playTrack(0); } }
 
         function togglePlay() {
             if (!audio.src) { if(albums.length > 0) handleAlbumClick(albums[0]); return; }
-            if (audio.paused) { audio.play(); updatePlayButton(true); } else { audio.pause(); updatePlayButton(false); }
+            const v1 = document.getElementById('albumVideo');
+            const v2 = document.getElementById('expVideo');
+            
+            if (audio.paused) { 
+                audio.play(); 
+                if(v1 && v1.src) v1.play().catch(()=>{});
+                if(v2 && v2.src) v2.play().catch(()=>{});
+                updatePlayButton(true); 
+            } else { 
+                audio.pause(); 
+                if(v1) v1.pause();
+                if(v2) v2.pause();
+                updatePlayButton(false); 
+            }
             updateTracklistVisuals();
         }
 
         function updatePlayButton(isPlaying) {
             const playSvg = `<path d="M8 5v14l11-7z"/>`; const pauseSvg = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
             playIcon.innerHTML = isPlaying ? pauseSvg : playSvg; expPlayIcon.innerHTML = isPlaying ? pauseSvg : playSvg;
+            
+            // GARANTE QUE O CONTROLE DA TELA DE BLOQUEIO ATUALIZE O ESTADO PERFEITAMENTE
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
+            }
         }
 
         function updateTracklistVisuals() {
@@ -979,39 +1124,23 @@
             if (playingAlbum && selectedAlbum && playingAlbum.id === selectedAlbum.id && !audio.paused) { const activeRow = document.getElementById(`track-${currentTrackIndex}`); if (activeRow) activeRow.classList.add('playing'); }
         }
 
-        /* LÓGICA DE REPETIÇÃO CORRIGIDA COMPLETA */
         function nextTrack() {
             if (playingTracks.length === 0) return;
+            if (currentRepeatMode === 1) { playTrack(currentTrackIndex); return; }
+            if (isShuffleActive) { playTrack(Math.floor(Math.random() * playingTracks.length)); return; }
             
-            // Modo 1: Repetir 1 Música
-            if (currentRepeatMode === 1) { 
-                playTrack(currentTrackIndex); 
-                return; 
-            }
-            
-            // Modo Aleatório Ativo
-            if (isShuffleActive) { 
-                playTrack(Math.floor(Math.random() * playingTracks.length)); 
-                return; 
-            }
-            
-            // Avança normalmente se não for a última faixa
             if (currentTrackIndex < playingTracks.length - 1) {
                 playTrack(currentTrackIndex + 1);
             } else {
-                // Chegou ao fim das faixas atuais do álbum
                 if (currentRepeatMode === 2) { 
-                    // Modo 2: Repetir Álbum (Volta para a faixa 0)
                     playTrack(0); 
                 } else if (currentRepeatMode === 3) { 
-                    // Modo 3: Discografia Completa (Vai para o próximo álbum da lista global)
                     let currentAlbumIdx = albums.findIndex(a => a.id === playingAlbum.id);
                     let nextAlbumIdx = (currentAlbumIdx + 1) % albums.length;
                     
                     playingAlbum = albums[nextAlbumIdx];
                     let targetVersion = null;
 
-                    // CORREÇÃO: Verifica se o álbum tem versões e escolhe a que tiver mais tracks
                     if (playingAlbum.hasVersions && playingAlbum.versions && playingAlbum.versions.length > 0) {
                         targetVersion = playingAlbum.versions.reduce((max, current) => {
                             return (current.tracks.length > max.tracks.length) ? current : max;
@@ -1021,13 +1150,11 @@
                         playingTracks = playingAlbum.tracks;
                     }
                     
-                    // Atualiza a tela se o usuário estiver olhando para ela
                     if (document.getElementById('albumDetailSection').style.display === 'flex' && selectedAlbum) {
                         openAlbum(playingAlbum, targetVersion);
                     }
                     playTrack(0);
                 } else {
-                    // Repetição Desligada (Para a reprodução)
                     audio.pause();
                     updatePlayButton(false);
                 }
@@ -1048,7 +1175,23 @@
 
         function seekAudio(event) { if (!audio.duration) return; audio.currentTime = ((event.clientX - progressBarBg.getBoundingClientRect().left) / progressBarBg.getBoundingClientRect().width) * audio.duration; }
         function seekAudioExp(event) { if (!audio.duration) return; audio.currentTime = ((event.clientX - expProgressBarBg.getBoundingClientRect().left) / expProgressBarBg.getBoundingClientRect().width) * audio.duration; }
-        function setVolume(value) { audio.volume = value; }
+        
+        function setVolume(value) { 
+            audio.volume = value; 
+            audio.muted = (value == 0);
+        }
+
+        // FUNÇÃO DE MUTAR/ATIVAR AUDIO PARA CELULARES
+        function toggleMute() {
+            audio.muted = !audio.muted;
+            const volumeIcon = document.getElementById('volumeIcon');
+            if (audio.muted) {
+                volumeIcon.innerHTML = `<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>`;
+            } else {
+                volumeIcon.innerHTML = `<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>`;
+            }
+        }
+
         audio.addEventListener('ended', nextTrack);
 
         const expPlayer = document.getElementById('expandedPlayerMobile');
@@ -1128,4 +1271,3 @@
     </script>
 </body>
 </html>
-
