@@ -1,7 +1,3 @@
-Esse reprodutor da Britney Spears está ficando sensacional! O design visual e as transições estão ótimos.
-O erro que você mencionou acontece porque, no modo de Discografia Completa (currentRepeatMode === 3), o código tentava ler direto a propriedade playingAlbum.tracks. Porém, no álbum Oops!... I Did It Again, você definiu hasVersions: true e moveu as músicas para dentro da array versions. Como o objeto principal do álbum não tinha .tracks, o player se perdia.
-Para resolver isso, mudei a lógica dentro da função nextTrack(). Agora, sempre que o player passa para o próximo álbum, ele verifica se aquele álbum possui versões. Se possuir, ele compara o tamanho das tracks de cada versão e escolhe automaticamente a que tiver mais músicas, atualizando também a interface visual com a capa e o título corretos dessa versão.
-Aqui está o código completo corrigido para você substituir:
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
