@@ -1,3 +1,7 @@
+Esse reprodutor da Britney Spears está ficando sensacional! O design visual e as transições estão ótimos.
+O erro que você mencionou acontece porque, no modo de Discografia Completa (currentRepeatMode === 3), o código tentava ler direto a propriedade playingAlbum.tracks. Porém, no álbum Oops!... I Did It Again, você definiu hasVersions: true e moveu as músicas para dentro da array versions. Como o objeto principal do álbum não tinha .tracks, o player se perdia.
+Para resolver isso, mudei a lógica dentro da função nextTrack(). Agora, sempre que o player passa para o próximo álbum, ele verifica se aquele álbum possui versões. Se possuir, ele compara o tamanho das tracks de cada versão e escolhe automaticamente a que tiver mais músicas, atualizando também a interface visual com a capa e o título corretos dessa versão.
+Aqui está o código completo corrigido para você substituir:
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -83,7 +87,7 @@
             background: rgba(18, 18, 18, 0.25); z-index: -1; /* <--- Reduzi a opacidade da película escura de 0.4 para 0.25 */
             opacity: var(--blur-overlay-opacity); transition: opacity 0.8s ease;
         }
-        body.light-mode .dynamic-blur-overlay { background: rgba(255, 255, 255, 0.15); } /* <--- Reduzi no modo claro de 0.3 para 0.15 */
+        body.light-mode .dynamic-blur-overlay { background: rgba(255, 255, 255, 0.15); } /* <--- Reduzi no modo claro de 0.15 para 0.15 */
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; height: 100vh; overflow: hidden; transition: background-color 0.3s, color 0.3s; }
@@ -1009,11 +1013,21 @@
                     let nextAlbumIdx = (currentAlbumIdx + 1) % albums.length;
                     
                     playingAlbum = albums[nextAlbumIdx];
-                    playingTracks = playingAlbum.tracks;
+                    let targetVersion = null;
+
+                    // CORREÇÃO: Verifica se o álbum tem versões e escolhe a que tiver mais tracks
+                    if (playingAlbum.hasVersions && playingAlbum.versions && playingAlbum.versions.length > 0) {
+                        targetVersion = playingAlbum.versions.reduce((max, current) => {
+                            return (current.tracks.length > max.tracks.length) ? current : max;
+                        }, playingAlbum.versions[0]);
+                        playingTracks = targetVersion.tracks;
+                    } else {
+                        playingTracks = playingAlbum.tracks;
+                    }
                     
                     // Atualiza a tela se o usuário estiver olhando para ela
                     if (document.getElementById('albumDetailSection').style.display === 'flex' && selectedAlbum) {
-                        openAlbum(playingAlbum, null);
+                        openAlbum(playingAlbum, targetVersion);
                     }
                     playTrack(0);
                 } else {
